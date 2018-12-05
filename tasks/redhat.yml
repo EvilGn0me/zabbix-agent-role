@@ -1,0 +1,16 @@
+---
+- name: add repositories
+  yum_repository:
+    name: "{{ item.value.name }}"
+    baseurl: "{{ item.value.baseurl }}"
+    description: Repo managed by Ansible
+    gpgcheck: no
+  with_dict: "{{ zabbix_agent_common.repos }}"
+
+
+- name: install zabbix packages
+  yum:
+    name: "{{ item }}"
+    state: latest
+  with_items:
+    - "{{ zabbix_agent_common.packages }}"

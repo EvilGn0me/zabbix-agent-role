@@ -1,0 +1,13 @@
+---
+zabbix_agent_common:
+  repos:
+    zabbix:
+      name: 'zabbix'
+      baseurl: 'http://repo.zabbix.com/zabbix/3.4/rhel/7/$basearch/'
+  packages:
+    - zabbix-agent
+    - jq
+  python_modules:
+    - zabbix-api
+  services:
+    - zabbix-agent

@@ -1,0 +1,10 @@
+---
+# defaults file for zabbix-agent
+zabbix_agent_vars:
+  server: '127.0.0.1'
+  dirs:
+    home: /var/lib/zabbix
+    logs: /var/log/zabbix
+    scripts: /opt/zabbix_scripts
+    conf: /etc/zabbix/zabbix_agentd.d
+    modules: /opt/zabbix_modules

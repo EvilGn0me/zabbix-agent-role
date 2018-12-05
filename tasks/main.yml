@@ -1,0 +1,95 @@
+---
+# tasks file for zabbix-agent
+
+- name: Load a variable file based on the OS type.
+  include_vars: "{{ item }}"
+  with_first_found:
+    - "{{ ansible_distribution|lower }}.yml"
+    - "{{ ansible_os_family|lower }}.yml"
+
+- name: pre-requisites tasks
+  import_tasks: redhat.yml
+  when: ansible_os_family|lower == 'redhat'
+
+- name: pre-requisites tasks
+  import_tasks: debian.yml
+  when: ansible_os_family|lower == 'debian'
+
+- name: manage directories for zabbix-agent
+  file:
+    path: '{{ item.value }}'
+    owner: zabbix
+    group: zabbix
+    state: directory
+    mode: 0755
+  with_dict:
+    '{{ zabbix_agent_vars.dirs }}'
+
+- name: manage zabbix-agent config file
+  template:
+    src: "templates/zabbix_agentd.conf"
+    dest: "/etc/zabbix/zabbix_agentd.conf"
+    owner: root
+    group: root
+    mode: 0644
+  notify: restart zabbix agent
+
+- name: manage zabbix-agent userparameter
+  template:
+    src: 'templates/userparameter_{{ item }}.conf'
+    dest: '/etc/zabbix/zabbix_agentd.d/userparameter_{{ item }}.conf'
+    owner: root
+    group: root
+    mode: 0644
+  with_items:
+    - ansible
+  notify: restart zabbix agent
+
+- name: install modules
+  get_url:
+    url: '{{ item.value.url }}'
+    dest: '{{ zabbix_agent_vars.dirs.modules }}/{{ item.value.name }}.so'
+  with_dict:
+   '{{ zabbix_agent_vars.modules }}'
+  when: zabbix_agent_vars.modules is defined
+
+- name: ensure services running
+  service:
+    name: "{{ item }}"
+    state: started
+    enabled: yes
+  with_items:
+    - "{{ zabbix_agent_common.services }}"
+
+- name: install python modules
+  pip:
+    name: '{{ item }}'
+    state: present
+  with_items:
+    - '{{ zabbix_agent_common.python_modules }}'
+
+- name: Create a new host or update an existing host's info
+  local_action:
+    module: zabbix_host
+    server_url: '{{ zabbix_url }}'
+    login_user: '{{ zabbix_user}}'
+    login_password: '{{ zabbix_pass }}'
+    host_name: '{{ ansible_fqdn }}'
+    visible_name: '{{ ansible_fqdn }}'
+    force: no
+    host_groups:
+      - Linux servers
+    link_templates:
+      - Template OS Linux
+      - Template App SSH Service
+    interfaces:
+      - type: 1
+        main: 1
+        useip: 1
+        ip: '{{ ansible_default_ipv4.address }}'
+        dns: ""
+        port: 10050
+    status: enabled
+    state: present
+    inventory_mode: automatic
+  ignore_errors: yes

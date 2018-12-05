@@ -1,0 +1,13 @@
+---
+zabbix_agent_common:
+  repos:
+    zabbix:
+      repo: 'deb http://repo.zabbix.com/zabbix/3.4/{{ ansible_distribution|lower }} {{ ansible_distribution_release|lower }} main'
+      key: 'https://repo.zabbix.com/zabbix-official-repo.key'
+  packages:
+    - zabbix-agent
+    - jq
+  python_modules:
+    - zabbix-api
+  services:
+    - zabbix-agent
