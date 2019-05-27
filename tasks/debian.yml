@@ -2,21 +2,19 @@
 - name: add repo keys
   apt_key:
     url: "{{ item.value.key }}"
-  with_dict: "{{ zabbix_agent_common.repos }}"
+  with_dict: "{{ zabbix_agent.repos }}"
 
 - name: add repositories for zabbix
   apt_repository:
     repo: "{{ item.value.repo }}"
     state: present
-  with_dict: "{{ zabbix_agent_common.repos }}"
+  with_dict: "{{ zabbix_agent.repos }}"
 
 - name: install zabbix packages
   apt:
-    name: "{{ item }}"
+    name: "{{ zabbix_agent.packages }}"
     state: latest
     update_cache: yes
-  with_items:
-    - "{{ zabbix_agent_common.packages }}"
 
 - name: remove directories for zabbix
   file:

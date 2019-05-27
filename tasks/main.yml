@@ -59,14 +59,12 @@
     state: started
     enabled: yes
   with_items:
-    - "{{ zabbix_agent_common.services }}"
+    - "{{ zabbix_agent.services }}"
 
 - name: install python modules
   pip:
-    name: '{{ item }}'
+    name: '{{ zabbix_agent.python_modules }}'
     state: present
-  with_items:
-    - '{{ zabbix_agent_common.python_modules }}'
 
 - name: Create a new host or update an existing host's info
   local_action:
@@ -93,3 +91,4 @@
     state: present
     inventory_mode: automatic
   ignore_errors: yes
+  when: zabbix_url is defined

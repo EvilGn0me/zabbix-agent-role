@@ -5,12 +5,10 @@
     baseurl: "{{ item.value.baseurl }}"
     description: Repo managed by Ansible
     gpgcheck: no
-  with_dict: "{{ zabbix_agent_common.repos }}"
+  with_dict: "{{ zabbix_agent.repos }}"
 
 
 - name: install zabbix packages
   yum:
-    name: "{{ item }}"
+    name: "{{ zabbix_agent.packages }}"
     state: latest
-  with_items:
-    - "{{ zabbix_agent_common.packages }}"

@@ -1,5 +1,5 @@
 ---
-zabbix_agent_common:
+zabbix_agent:
   repos:
     zabbix:
       name: 'zabbix'

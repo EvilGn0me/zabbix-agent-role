@@ -5,4 +5,4 @@
     state: restarted
     enabled: yes
   with_items:
-    - "{{ zabbix_agent_common.services }}"
+    - "{{ zabbix_agent.services }}"
