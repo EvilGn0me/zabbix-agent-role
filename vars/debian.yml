@@ -2,7 +2,7 @@
 zabbix_agent:
   repos:
     zabbix:
-      repo: 'deb http://repo.zabbix.com/zabbix/3.4/{{ ansible_distribution|lower }} {{ ansible_distribution_release|lower }} main'
+      repo: 'deb http://repo.zabbix.com/zabbix/4.0/{{ ansible_distribution|lower }} {{ ansible_distribution_release|lower }} main'
       key: 'https://repo.zabbix.com/zabbix-official-repo.key'
   packages:
     - zabbix-agent

@@ -3,7 +3,7 @@ zabbix_agent:
   repos:
     zabbix:
       name: 'zabbix'
-      baseurl: 'http://repo.zabbix.com/zabbix/3.4/rhel/7/$basearch/'
+      baseurl: 'http://repo.zabbix.com/zabbix/4.0/rhel/7/$basearch/'
   packages:
     - zabbix-agent
     - jq
